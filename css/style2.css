@@ -17,6 +17,7 @@ body {
 .error{
 	color: red;
 	text-decoration: underline; 
+	font-size: 12pt; 
 }
 
 form {
