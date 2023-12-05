@@ -13,7 +13,7 @@
     <h2>Sign Up</h2>
     <p>Please fill in this form to create an account!</p>
     
-    <form action="db.php" method="post" onsubmit="return validate()">
+    <form action="registration_submit.php" method="post" onsubmit="return validate()">
 	
 		<div class="error" id="fnameErr"></div>
       <div class="input_area">
