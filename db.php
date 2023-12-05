@@ -61,8 +61,11 @@ function hashPass($password) {
 }
 function verifyPass($password, $email) {
     $db = getDB();
-    $sql = "SELECT pass FROM User WHERE email='$email'";
-    $result = $db->query($sql);
+    $sql = "SELECT pass FROM User WHERE email=?";
+    $statement = $db->prepare($sql);
+    $statement->bind_param("s", $email);
+    $statement->execute();
+    $result = $statement->fetch_assoc();
     if(count($result) == 0)
     {
         return false;
@@ -71,6 +74,7 @@ function verifyPass($password, $email) {
     {
         $internalPass = $result["pass"];
     }
+    $db->close();
     // accepts password, returns true if input and stored passwords match
     return password_verify($password, $internalPass);
 }
