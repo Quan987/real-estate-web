@@ -74,6 +74,7 @@ function createUser() {
 	$registerPass = hashPass($_POST["password"]);
 	$sql = "INSERT INTO User(username,email,fname,lname,pass,perm)VALUES('$registerName','$registerEmail','$registerFirstName','$registerLastName','$registerPass',1)";
 	$db->query($sql);
+	$db->close();
 }
 
 
