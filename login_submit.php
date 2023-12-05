@@ -42,7 +42,7 @@
         exit;
     } else {
         // Set location to go to if user exist
-        header('Location: ./buyer.html');
+        header('Location: ./buyer.php');
         exit;
     }
 
