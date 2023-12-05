@@ -59,9 +59,20 @@ function hashPass($password) {
     // accepts plaintext password, returns bcrypt hashed password
     return password_hash($password, PASSWORD_BCRYPT);
 }
-function verifyPass($password) {
+function verifyPass($password, $email) {
+    $db = getDB();
+    $sql = "SELECT pass FROM User WHERE email='$email'";
+    $result = $db->query($sql);
+    if(count($result) == 0)
+    {
+        return false;
+    }
+    else
+    {
+        $internalPass = $result["pass"];
+    }
     // accepts password, returns true if input and stored passwords match
-    return password_verify($password, hashPass("examplePassword")); // TODO: retrieve from table
+    return password_verify($password, $internalPass);
 }
 
 function createUser() {
