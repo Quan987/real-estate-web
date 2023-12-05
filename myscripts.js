@@ -114,3 +114,4 @@ function addToWishlist(propertyId) {
         alert('Property is already in the wishlist.');
     }
 }
+
