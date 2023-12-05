@@ -17,7 +17,7 @@
   <div class="registration">
     <h2 class = "center">Login Here</h2>
 	
-    <form action="user_register.php" method="post">
+    <form action="login_submit.php" method="post">
  
       <div class="input_area">
         <img src="img/email.png" alt="Email Icon" class="icon">

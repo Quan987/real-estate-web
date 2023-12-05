@@ -59,18 +59,39 @@ function hashPass($password) {
     // accepts plaintext password, returns bcrypt hashed password
     return password_hash($password, PASSWORD_BCRYPT);
 }
-function verifyPass($password) {
+function verifyPass($password, $email) {
+    $db = getDB();
+    $sql = "SELECT pass FROM User WHERE email=?";
+    $statement = $db->prepare($sql);
+    $statement->bind_param("s", $email);
+    $statement->execute();
+    $result = $statement->fetch_assoc();
+    if(count($result) == 0)
+    {
+        return false;
+    }
+    else
+    {
+        $internalPass = $result["pass"];
+    }
+    $db->close();
     // accepts password, returns true if input and stored passwords match
-    return password_verify($password, hashPass("examplePassword")); // TODO: retrieve from table
+    return password_verify($password, $internalPass);
 }
 
 function createUser() {
     // Take from the superglobal $_POST and create a row in User for the entered information
     $db = getDB();
-    $statement = $db->prepare("INSERT INTO User VALUES(?, ?, ?, ?, ?, ?)");
-    $statement->bind_param("sssssi", $_POST["username"], $_POST["email"], $_POST["firstname"], $_POST["lastname"], hashPass($_POST["password"]), 1);
+	$registerName =$_POST["username"];
+	$registerEmail = $_POST["email"];
+	$registerFirstName = $_POST["firstname"];
+	$registerLastName = $_POST["lastname"];
+	$registerPass = hashPass($_POST["password"]);
+	$permNum = 1;
+    $statement = $db->prepare("INSERT INTO User (username, email,fname,lname, pass,perm) VALUES(?, ?, ?, ?, ?, ?)");
+    $statement->bind_param("sssssi", $registerName, $registerEmail, $registerFirstName, $registerLastName, $registerPass, $permNum);
     $statement->execute();
-    $db->close();
+	$db->close();
 }
 
 
