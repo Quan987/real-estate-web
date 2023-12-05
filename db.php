@@ -67,10 +67,13 @@ function verifyPass($password) {
 function createUser() {
     // Take from the superglobal $_POST and create a row in User for the entered information
     $db = getDB();
-    $statement = $db->prepare("INSERT INTO User VALUES(?, ?, ?, ?, ?, ?)");
-    $statement->bind_param("sssssi", $_POST["username"], $_POST["email"], $_POST["firstname"], $_POST["lastname"], hashPass($_POST["password"]), 1);
-    $statement->execute();
-    $db->close();
+	$registerName =$_POST["username"];
+	$registerEmail = $_POST["email"];
+	$registerFirstName = $_POST["firstname"];
+	$registerLastName = $_POST["lastname"];
+	$registerPass = hashPass($_POST["password"]);
+	$sql = "INSERT INTO User(username,email,fname,lname,pass,perm)VALUES('$registerName','$registerEmail','$registerFirstName','$registerLastName','$registerPass',1)";
+	$db->query($sql);
 }
 
 
