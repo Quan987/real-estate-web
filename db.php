@@ -72,8 +72,10 @@ function createUser() {
 	$registerFirstName = $_POST["firstname"];
 	$registerLastName = $_POST["lastname"];
 	$registerPass = hashPass($_POST["password"]);
-	$sql = "INSERT INTO User(username,email,fname,lname,pass,perm)VALUES('$registerName','$registerEmail','$registerFirstName','$registerLastName','$registerPass',1)";
-	$db->query($sql);
+	$permNum = 1;
+    $statement = $db->prepare("INSERT INTO User (username, email,fname,lname, pass,perm) VALUES(?, ?, ?, ?, ?, ?)");
+    $statement->bind_param("sssssi", $registerName, $registerEmail, $registerFirstName, $registerLastName, $registerPass, $permNum);
+    $statement->execute();
 	$db->close();
 }
 
