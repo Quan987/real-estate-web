@@ -14,7 +14,7 @@
 <body>
     <!-- Just demo for now -->
     <div>
-        Session error: <?= SESSION['error'] ?>
+        Session error: <?= $_SESSION['error'] ?>
     </div>
     <button>Go to <a href="./session_destroy.php">Main Page</a></button>
 </body>
