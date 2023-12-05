@@ -65,15 +65,9 @@ function verifyPass($password, $email) {
     $statement = $db->prepare($sql);
     $statement->bind_param("s", $email);
     $statement->execute();
-    $result = $statement->fetch_assoc();
-    if(count($result) == 0)
-    {
-        return false;
-    }
-    else
-    {
-        $internalPass = $result["pass"];
-    }
+    $intermediate = $statement->get_result();
+    $result = $intermediate->fetch_assoc();
+    $internalPass = $result["pass"];
     $db->close();
     // accepts password, returns true if input and stored passwords match
     return password_verify($password, $internalPass);
