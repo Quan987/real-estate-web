@@ -95,7 +95,7 @@
 				$db = getDB();
 				if(isset($_POST["search"]) and !isset($_POST["wishFilter"]))
 				{
-					$sql="SELECT * FROM Card WHERE addr LIKE '%?' price > ? and price < ? and beds > ? and baths > ? ";
+					$sql="SELECT * FROM Card WHERE addr LIKE '%?%' price > ? and price < ? and beds > ? and baths > ? ";
 					$statement = $db->prepare($sql);
     				$statement->bind_param("siiii", $searchBar, $minPrice, $maxPrice, $minBed, $minBath);
     				$statement->execute();
@@ -103,7 +103,7 @@
 				}
 				else if(isset($_POST["search"]) and isset($_POST["wishFilter"]))
 				{
-					$sql="SELECT * FROM Card WHERE addr LIKE '%?' price > ? and price < ? and beds > ? and baths > ?";
+					$sql="SELECT * FROM Card WHERE addr LIKE '%?%' price > ? and price < ? and beds > ? and baths > ?";
 					//Adding implementation to include wishlisted value later.
 					$statement = $db->prepare($sql);
     				$statement->bind_param("siiii", $searchBar, $minPrice, $maxPrice, $minBed, $minBath);
@@ -127,38 +127,29 @@
     				$statement->execute();
 					$intermediate = $statement->get_result();
 				}
-				
-				if(!$result)
+				while($result -> fetch_assoc($intermediate))
 				{
-					//Return no card
-				}
-				else
-				{
-					//Return the relevant information
-					while($result -> fetch_assoc($intermediate))
-					{
-						$seller = $result["seller"];
-						$addr = $result["addr"];
-						$age = $result["age"];
-						$price = $result["price"];
-						$img = $result["img"];
-						$beds = $result["bed"];
-						$baths = $result["baths"];
-						$garage = $result["garage"];
-						$area = $result["areaL"] * $result["areaW"];
-						?>
-						<div class="property-card">
-							<img src="<?=$img?>" alt="Property Image" style="width:100%;">
-							<h3>Sold by <?=$seller?></h3>
-							<p>Location: <?=$addr?></p>
-							<p>Price: <?=$price?></p>
-							<!-- The stuff in here should be saved for when the user clicks on the card
-							<p>//$beds  bedrooms, //$baths bathrooms, =//$garage garage</p>
-							<p>Area: //$area square feet</p>
-							Implement wishlist later -->
-						</div>
-					<?php }
-				}
+					$seller = $result["seller"];
+					$addr = $result["addr"];
+					$age = $result["age"];
+					$price = $result["price"];
+					$img = $result["img"];
+					$beds = $result["bed"];
+					$baths = $result["baths"];
+					$garage = $result["garage"];
+					$area = $result["areaL"] * $result["areaW"];
+					?>
+					<div class="property-card">
+						<img src="<?=$img?>" alt="Property Image" style="width:100%;">
+						<h3>Sold by <?=$seller?></h3>
+						<p>Location: <?=$addr?></p>
+						<p>Price: <?=$price?></p>
+						<!-- The stuff in here should be saved for when the user clicks on the card
+						<p>//$beds  bedrooms, //$baths bathrooms, =//$garage garage</p>
+						<p>Area: //$area square feet</p>
+						Implement wishlist later -->
+					</div>
+				<?php}
 				$db->close();
 			?>
         </div>
