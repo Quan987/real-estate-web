@@ -20,7 +20,7 @@
 		
         <!-- <input type="text" id="searchInput" class="search-bar" placeholder="Search...">
         <button onclick="search()">Search</button> -->
-		<form action="buyer.php" method="post">
+		<form action="" method="post">
 			<input type="text" id="search" name="search" class="search-bar" placeholder="Search...">
 			<br>
 			<label for="minBed">Minimum number of bedrooms</label> 
