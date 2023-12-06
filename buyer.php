@@ -127,7 +127,12 @@
     				$statement->execute();
 					$intermediate = $statement->get_result();
 				}
-				while($result -> fetch_assoc($intermediate))
+				$result2 = $intermediate->fetch_assoc();
+				if(!$result2)
+				{ ?>
+					<p>EMPTY SHEET</p>
+				<?php }
+				while($result = $intermediate->fetch_assoc())
 				{
 					$seller = $result["seller"];
 					$addr = $result["addr"];
@@ -149,7 +154,7 @@
 						<p>Area: //$area square feet</p>
 						Implement wishlist later -->
 					</div>
-				<?php}
+				<?php }
 				$db->close();
 			?>
         </div>
