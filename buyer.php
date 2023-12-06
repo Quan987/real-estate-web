@@ -128,7 +128,7 @@
 					$intermediate = $statement->get_result();
 				}
 				$result2 = $intermediate->fetch_assoc();
-				if(!$result2)
+				if($result2)
 				{ ?>
 				<div class="property-card">
 					<p>EMPTY SHEET</p>
