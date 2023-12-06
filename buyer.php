@@ -1,7 +1,7 @@
 <?php
     session_start();
 	if(empty($_SESSION['user_auth'])) {
-        header('Location: ./homepage.html');
+        header('Location: ./session_destroy_buyer.php');
         exit;
 	}
 ?>
@@ -21,7 +21,7 @@
         <!-- <input type="text" id="searchInput" class="search-bar" placeholder="Search...">
         <button onclick="search()">Search</button> -->
 		<form action="buyer.php" method="post">
-			<input type="text" id="search" class="search-bar" placeholder="Search...">
+			<input type="text" id="search" name="search" class="search-bar" placeholder="Search...">
 			<br>
 			<label for="minBed">Minimum number of bedrooms</label> 
 			<select name="minBed" id="minBed">
@@ -79,16 +79,86 @@
 				<option value=10000000>$10,000,000</option>
 				<option value=1000000000000 selected>No limit</option>
 			</select>
+			<br>
+			<label for="wishFilter">Wishlisted only:</label>
+			<input type="checkbox" value="yes" name="wishFilter"></input>
 			<br><br>
 			<input type="submit" value = "Search">
 		</form>
         <div class="search-results" id="searchResults">
 			<?php
-				$minBed = $_POST["minBed"];
-				$minBath = $_POST["minBath"];
-				$minPrice = $_POST["minPrice"];
-				$maxPrice = $_POST["maxPrice"];
+				$minBed = (int)$_POST["minBed"];
+				$minBath = (float)$_POST["minBath"];
+				$minPrice =(float) $_POST["minPrice"];
+				$maxPrice = (float) $_POST["maxPrice"];
+				$searchBar = $_POST["search"];
 				$db = getDB();
+				if(isset($_POST["search"]) and !isset($_POST["wishFilter"]))
+				{
+					$sql="SELECT * FROM Card WHERE addr LIKE '%?' price > ? and price < ? and beds > ? and baths > ? ";
+					$statement = $db->prepare($sql);
+    				$statement->bind_param("siiii", $searchBar, $minPrice, $maxPrice, $minBed, $minBath);
+    				$statement->execute();
+					$intermediate = $statement->get_result();
+				}
+				else if(isset($_POST["search"]) and isset($_POST["wishFilter"]))
+				{
+					$sql="SELECT * FROM Card WHERE addr LIKE '%?' price > ? and price < ? and beds > ? and baths > ?";
+					//Adding implementation to include wishlisted value later.
+					$statement = $db->prepare($sql);
+    				$statement->bind_param("siiii", $searchBar, $minPrice, $maxPrice, $minBed, $minBath);
+    				$statement->execute();
+					$intermediate = $statement->get_result();
+				}
+				else if(isset($_POST["wishFilter"]))
+				{
+					$sql="SELECT * FROM Card WHERE price > ? and price < ? and beds > ? and baths > ?";
+					//Adding implementation to include wishlisted value later using EXIST in the select statement to check the 2nd table
+					$statement = $db->prepare($sql);
+    				$statement->bind_param("iiii", $minPrice, $maxPrice, $minBed, $minBath);
+    				$statement->execute();
+					$intermediate = $statement->get_result();
+				}
+				else
+				{
+					$sql="SELECT * FROM Card WHERE price > ? and price < ? and beds > ? and baths > ?";
+					$statement = $db->prepare($sql);
+    				$statement->bind_param("iiii", $minPrice, $maxPrice, $minBed, $minBath);
+    				$statement->execute();
+					$intermediate = $statement->get_result();
+				}
+				
+				if(!$result)
+				{
+					//Return no card
+				}
+				else
+				{
+					//Return the relevant information
+					while($result -> fetch_assoc($intermediate))
+					{
+						$seller = $result["seller"];
+						$addr = $result["addr"];
+						$age = $result["age"];
+						$price = $result["price"];
+						$img = $result["img"];
+						$beds = $result["bed"];
+						$baths = $result["baths"];
+						$garage = $result["garage"];
+						$area = $result["areaL"] * $result["areaW"];
+						?>
+						<div class="property-card">
+							<img src="<?=$img?>" alt="Property Image" style="width:100%;">
+							<h3>Sold by <?=$seller?></h3>
+							<p>Location: <?=$addr?></p>
+							<p>Price: <?=$price?></p>
+							<!-- The stuff in here should be saved for when the user clicks on the card
+							<p>//$beds  bedrooms, //$baths bathrooms, =//$garage garage</p>
+							<p>Area: //$area square feet</p>
+							Implement wishlist later -->
+						</div>
+					<?php }
+				}
 				$db->close();
 			?>
         </div>
