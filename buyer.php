@@ -130,9 +130,12 @@
 				$result2 = $intermediate->fetch_assoc();
 				if(!$result2)
 				{ ?>
+				<div class="property-card">
 					<p>EMPTY SHEET</p>
+				</div>
 				<?php }
-				while($result = $intermediate->fetch_assoc())
+				else
+				{while($result = $intermediate->fetch_assoc())
 				{
 					$seller = $result["seller"];
 					$addr = $result["addr"];
@@ -155,7 +158,7 @@
 						Implement wishlist later -->
 					</div>
 				<?php }
-				$db->close();
+				$db->close();}
 			?>
         </div>
 		<!--  Just commenting this out for now, I keep it here so we can keep the uh template for addToWishList and stuff
