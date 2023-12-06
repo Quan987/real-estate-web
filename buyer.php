@@ -1,5 +1,9 @@
 <?php
     session_start();
+	if(empty($_SESSION['user_auth'])) {
+        header('Location: ./homepage.html');
+        exit;
+	}
 ?>
 
 <!DOCTYPE html>
@@ -53,7 +57,7 @@
 			</select>
 			<label for="maxPrice">Maximum price:</label>
 			<select name="maxPrice" id="maxPrice">
-				<option value=0 selected>0</option>
+				<option value=0>0</option>
 				<option value=100000>$100,000</option>
 				<option value=200000>$200,000</option>
 				<option value=300000>$300,000</option>
@@ -73,11 +77,20 @@
 				<option value=8000000>$8,000,000</option>
 				<option value=9000000>$9,000,000</option>
 				<option value=10000000>$10,000,000</option>
+				<option value=1000000000000 selected>No limit</option>
 			</select>
-			<br>
+			<br><br>
 			<input type="submit" value = "Search">
 		</form>
         <div class="search-results" id="searchResults">
+			<?php
+				$minBed = $_POST["minBed"];
+				$minBath = $_POST["minBath"];
+				$minPrice = $_POST["minPrice"];
+				$maxPrice = $_POST["maxPrice"];
+				$db = getDB();
+				$db->close();
+			?>
         </div>
 		<!--  Just commenting this out for now, I keep it here so we can keep the uh template for addToWishList and stuff
 		<div class="property-card" onclick="viewPropertyDetails(1)">
