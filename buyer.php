@@ -1,6 +1,7 @@
 <?php
     require('./db.php');
     session_start();
+    initTables();
 	if(empty($_SESSION['user_auth'])) {
         header('Location: ./session_destroy_buyer.php');
         exit;
@@ -12,7 +13,7 @@
     if(isset($_POST["search"]) and $_POST["search"] != '')
     {
         $searchAvailable = 1;
-        $searchBar = $_POST["search"];
+        $searchBar = (string) $_POST["search"];
     }
     else
     {
@@ -113,10 +114,10 @@
                 $db = getDB();
                 if($searchAvailable == 1 && $wishFilter == 1)
                 {
-                    $sql="SELECT * FROM Card WHERE addr LIKE '%' + ? + '%' and price > ? and price < ? and beds > ? and baths > ?";
+                    $sql="SELECT * FROM Card WHERE (addr LIKE CONCAT('%', ?, '%')) and price > ? and price < ? and beds > ? and baths > ?";
 					//Adding implementation to include wishlisted value later.
 					$statement = $db->prepare($sql);
-    				$statement->bind_param("sddid", $searchBar, $minPrice, $maxPrice, $minBed, $minBath);
+    				$statement->bind_param("sddid",$searchBar, $minPrice, $maxPrice, $minBed, $minBath);
     				$statement->execute();
 					$intermediate = $statement->get_result();
                 }
@@ -131,7 +132,7 @@
                 }
                 else if($searchAvailable == 1)
                 {
-                    $sql="SELECT * FROM Card WHERE addr LIKE '%' + ? + '%' and price > ? and price < ? and beds > ? and baths > ? ";
+                    $sql="SELECT * FROM Card WHERE (addr LIKE CONCAT('%', ?, '%')) and price > ? and price < ? and beds > ? and baths > ? ";
 					$statement = $db->prepare($sql);
     				$statement->bind_param("sddid",$searchBar, $minPrice, $maxPrice, $minBed, $minBath);
     				$statement->execute();
@@ -145,7 +146,7 @@
     				$statement->execute();
 					$intermediate = $statement->get_result();
                 }
-                $data = $intermediate->fetch_all();
+                /*$data = $intermediate->fetch_all();
 				if(!$data)
 				{ ?>
 				<div class="property-card">
@@ -153,7 +154,7 @@
 				</div>
 				<?php }
                 else
-				{
+				{*/
                     while($result = $intermediate->fetch_assoc())
 				    {
 					    $seller = $result["seller"];
@@ -177,7 +178,7 @@
 						Implement wishlist later -->
 					</div>
 				<?php }
-				$db->close();}
+				$db->close();//}
 			?>
         </div>
     </div>

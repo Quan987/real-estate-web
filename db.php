@@ -48,6 +48,15 @@ function initTables() {
             FOREIGN KEY(seller) REFERENCES User(username)
         )"
     );
+
+    $db->query(
+        "CREATE TABLE IF NOT EXISTS Wishlist(
+            user VARCHAR(100) NOT NULL,
+            addr TEXT NOT NULL
+        )"
+    );
+
+
     $db->close();
 }
 
@@ -88,6 +97,49 @@ function createUser() {
 	$db->close();
 }
 
+function createCard()
+{//Change value so we can manually add new properties later for testing
+    $db = getDB();
+    $seller = 'seller';
+    $addr = "2013 Random Street, Random City, Random State";
+    $age = 5;
+    $price = 350000;
+    $img = "property-image.jpg";
+    $beds = 3;
+    $baths = 2;
+    $garage = 1;
+    $areaL = 60;
+    $areaW = 40;
+    $db->query(
+        "INSERT INTO Card
+        (   
+            seller,
+            addr,
+            age,
+            price,
+            img,
+            beds,
+            baths,
+            garage,
+            areaL,
+            areaW
+        )
+        VALUES
+        (
+            '$seller',
+            '$addr',
+            '$age',
+            '$price',
+            '$img',
+            '$beds',
+            '$baths',
+            '$garage',
+            '$areaL',
+            '$areaW'
+        )"
+    );
+    $db->close();
+}
 
 
 ?>

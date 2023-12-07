@@ -2,7 +2,7 @@
     session_start();
     $_SESSION['error'] = '';
 	require('./db.php');
-
+    initTables();
     if ($_SERVER["REQUEST_METHOD"] == 'POST')
     {
         $email = $_POST['email'];
