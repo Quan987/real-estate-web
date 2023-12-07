@@ -66,3 +66,6 @@ input[type="submit"] :hover {
 #logout {
   margin-top: 2rem;
 }
+.center{
+	text-align: center; 
+}

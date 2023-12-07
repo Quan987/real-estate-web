@@ -11,3 +11,16 @@ function seeDetail(element) {
     document.body.appendChild(form)
     form.submit()
 }
+
+function addToWishlist() {
+    let loc = document.querySelector("h1").innerText
+    let form = document.createElement("form")
+    let address = document.createElement("input")
+    form.setAttribute("method", "post")
+    form.setAttribute("action", "./displayCard.php")
+    address.setAttribute("name", "wlocation")
+    address.setAttribute("value", loc)
+    form.appendChild(address)
+    document.body.appendChild(form)
+    form.submit()
+}
