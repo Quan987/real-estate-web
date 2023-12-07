@@ -151,4 +151,22 @@ function getCardByAddr($addr) {
     return $out;
 }
 
+function addToWishlist($addr) {
+    $db = getDB();
+    $stmt = $db->prepare("INSERT INTO Wishlist VALUES(?, ?)");
+    $stmt->bind_param("ss", $_SESSION['user_auth'], $addr);
+    $stmt->execute();
+    $db->close();
+}
+
+function getWishlistByEmail($email) {
+    $db = getDB();
+    $stmt = $db->prepare("SELECT * FROM Wishlist WHERE email = ?");
+    $stmt->bind_param("s", $email);
+    $stmt->execute();
+    $ot = $stmt->get_result();
+    $out = $ot->fetch_all();
+    $db->close();
+    return $out;
+}
 ?>
