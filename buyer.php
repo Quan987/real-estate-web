@@ -146,15 +146,6 @@
     				$statement->execute();
 					$intermediate = $statement->get_result();
                 }
-                /*$data = $intermediate->fetch_all();
-				if(!$data)
-				{ ?>
-				<div class="property-card">
-					<p>No relevant property was found</p>
-				</div>
-				<?php }
-                else
-				{*/
                     while($result = $intermediate->fetch_assoc())
 				    {
 					    $seller = $result["seller"];
@@ -171,14 +162,14 @@
 						<img src="<?= $img; ?>" alt="Property Image" style="width:100%;">
 						<h3>Sold by <?= $seller; ?></h3>
 						<p>Location: <?= $addr; ?></p>
-						<p>Price: <?= $price; ?></p>
+						<p>Price: $<?= $price; ?></p>
 						<!-- The stuff in here should be saved for when the user clicks on the card
 						<p>//$beds  bedrooms, //$baths bathrooms, =//$garage garage</p>
 						<p>Area: //$area square feet</p>
 						Implement wishlist later -->
 					</div>
 				<?php }
-				$db->close();//}
+				$db->close();
 			?>
         </div>
     </div>
