@@ -141,5 +141,14 @@ function createCard()
     $db->close();
 }
 
+function getCardByAddr($addr) {
+    $db = getDB();
+    $stmt = $db->prepare("SELECT * FROM Card WHERE addr = ?");
+    $stmt->bind_param("s", $addr);
+    $stmt->execute();
+    $out = $stmt->get_result()->fetch_assoc();
+	$db->close();
+    return $out;
+}
 
 ?>
