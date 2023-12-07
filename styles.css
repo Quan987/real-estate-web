@@ -6,6 +6,11 @@ body {
 			background-image: url("property.avif");
         }
 
+img {
+    max-width:500px;
+    max-height:500px;
+}
+
         .dashboard {
             max-width: 800px;
             margin: 20px auto;
@@ -57,3 +62,4 @@ body {
           input[type="submit"] :hover {
             background-color: #2980b9;
           }
+        

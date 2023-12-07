@@ -11,10 +11,15 @@ function getHostUsername() {
 function getDB() {
     // Use this to return a mysqli connection
     $name = getHostUsername();
-    $host = "localhost";
+    /*$host = "localhost";
     $user = $name;
     $pass = $name;
     $dbname = $name;
+    Centralizing it to Bach's database*/
+    $host = "localhost";
+    $user = "bchiu1";
+    $pass = "bchiu1";
+    $dbname = "bchiu1";
 
     return new mysqli($host, $user, $pass, $dbname);
 }

@@ -19,8 +19,8 @@
             "<p>Sold by: " . $card["seller"] . 
             "<p>" . $card["beds"] . " bedrooms, " . $card["baths"] . " bathrooms</p>" . 
             "<p>" . $card["garage"] . "-car garage</p>" .
-            "<p>" . $card["areaL"] . "sq. ft. by " . $card["areaW"] . "sq. ft.</p>"
-
+            "<p>" . $card["areaL"] . " ft. by " . $card["areaW"] . " ft.</p>".
+            "<p>Total area: " . $card["areaL"] * $card["areaW"] . " sq ft. <p>"
         . "</div>";
     ?>
 </body>
