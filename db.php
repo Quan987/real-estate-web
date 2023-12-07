@@ -51,7 +51,7 @@ function initTables() {
 
     $db->query(
         "CREATE TABLE IF NOT EXISTS Wishlist(
-            user VARCHAR(100) NOT NULL,
+            email TEXT NOT NULL,
             addr TEXT NOT NULL
         )"
     );
