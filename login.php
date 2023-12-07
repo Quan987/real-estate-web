@@ -32,7 +32,7 @@
 	  </div>
     </form>
 	<br> 
-	<p class = "center"><a href="forgot_password.php">Forgot Password?</a></p>
+	<p class = "center"><a href="user_registration.php">Register</a></p>
   </div>
 
 </body>
