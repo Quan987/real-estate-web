@@ -1,5 +1,16 @@
-<?php require('./db.php'); 
+<?php
+    session_start();
+    require('./db.php'); 
     $card = getCardByAddr($_POST["location"]);
+    if (!isset($_POST["wlocation"])) {
+        $card = getCardByAddr($_POST["location"]);
+    } 
+    else {
+        //add to wishlist
+        $card = getCardByAddr($_POST["wlocation"]);
+        addToWishlist($_POST["wlocation"]);
+    }
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
