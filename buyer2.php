@@ -1,5 +1,4 @@
 <?php
-    require('./db.php');
     session_start();
 	if(empty($_SESSION['user_auth'])) {
         header('Location: ./session_destroy_buyer.php');
@@ -9,24 +8,8 @@
 	$minBath = (float)$_POST["minBath"];
 	$minPrice =(float) $_POST["minPrice"];
 	$maxPrice = (float) $_POST["maxPrice"];
-    if(isset($_POST["search"]) and $_POST["search"] != '')
-    {
-        $searchAvailable = 1;
-        $searchBar = $_POST["search"];
-    }
-    else
-    {
-        $searchAvailable = 0;
-    }
-	
-	if(isset($_POST["wishFilter"]))
-    {
-        $wishFilter = 1;
-    }
-    else
-    {
-        $wishFilter = 0;
-    }
+	$searchBar = $_POST["search"];
+	$wishFilter = isset($_POST["wishFilter"]);
 ?>
 
 <!DOCTYPE html>
@@ -110,61 +93,60 @@
 		</form>
         <div class="search-results" id="searchResults">
 			<?php
-                $db = getDB();
-                if($searchAvailable == 1 && $wishFilter == 1)
-                {
-                    $sql="SELECT * FROM Card WHERE addr LIKE '%' + ? + '%' and price > ? and price < ? and beds > ? and baths > ?";
+				$db = getDB();
+				if(isset($_POST["search"]) and !isset($_POST["wishFilter"]))
+				{
+					$sql="SELECT * FROM Card WHERE addr LIKE '%?%' price > ? and price < ? and beds > ? and baths > ? ";
+					$statement = $db->prepare($sql);
+    				$statement->bind_param("sddid", $searchBar, $minPrice, $maxPrice, $minBed, $minBath);
+    				$statement->execute();
+					$intermediate = $statement->get_result();
+				}
+				else if(isset($_POST["search"]) and isset($_POST["wishFilter"]))
+				{
+					$sql="SELECT * FROM Card WHERE addr LIKE '%?%' price > ? and price < ? and beds > ? and baths > ?";
 					//Adding implementation to include wishlisted value later.
 					$statement = $db->prepare($sql);
     				$statement->bind_param("sddid", $searchBar, $minPrice, $maxPrice, $minBed, $minBath);
     				$statement->execute();
 					$intermediate = $statement->get_result();
-                }
-                else if($wishFilter == 1)
-                {
-                    $sql="SELECT * FROM Card WHERE price > ? and price < ? and beds > ? and baths > ?";
+				}
+				else if(isset($_POST["wishFilter"]))
+				{
+					$sql="SELECT * FROM Card WHERE price > ? and price < ? and beds > ? and baths > ?";
 					//Adding implementation to include wishlisted value later using EXIST in the select statement to check the 2nd table
 					$statement = $db->prepare($sql);
     				$statement->bind_param("ddid", $minPrice, $maxPrice, $minBed, $minBath);
     				$statement->execute();
 					$intermediate = $statement->get_result();
-                }
-                else if($searchAvailable == 1)
-                {
-                    $sql="SELECT * FROM Card WHERE addr LIKE '%' + ? + '%' and price > ? and price < ? and beds > ? and baths > ? ";
-					$statement = $db->prepare($sql);
-    				$statement->bind_param("sddid",$searchBar, $minPrice, $maxPrice, $minBed, $minBath);
-    				$statement->execute();
-					$intermediate = $statement->get_result();
-                }
-                else
-                {
-                    $sql="SELECT * FROM Card WHERE price > ? and price < ? and beds > ? and baths > ?";
+				}
+				else
+				{
+					$sql="SELECT * FROM Card WHERE price > ? and price < ? and beds > ? and baths > ?";
 					$statement = $db->prepare($sql);
     				$statement->bind_param("ddid", $minPrice, $maxPrice, $minBed, $minBath);
     				$statement->execute();
 					$intermediate = $statement->get_result();
-                }
-                $data = $intermediate->fetch_all();
-				if(!$data)
+				}
+				$result2 = $intermediate->fetch_assoc();
+				if($result2)
 				{ ?>
 				<div class="property-card">
-					<p>No relevant property was found</p>
+					<p>EMPTY SHEET</p>
 				</div>
 				<?php }
-                else
+				else
+				{while($result = $intermediate->fetch_assoc())
 				{
-                    while($result = $intermediate->fetch_assoc())
-				    {
-					    $seller = $result["seller"];
-					    $addr = $result["addr"];
-					    $age = $result["age"];
-					    $price = $result["price"];
-					    $img = $result["img"];
-					    $beds = $result["bed"];
-					    $baths = $result["baths"];
-					    $garage = $result["garage"];
-					    $area = $result["areaL"] * $result["areaW"];
+					$seller = $result["seller"];
+					$addr = $result["addr"];
+					$age = $result["age"];
+					$price = $result["price"];
+					$img = $result["img"];
+					$beds = $result["bed"];
+					$baths = $result["baths"];
+					$garage = $result["garage"];
+					$area = $result["areaL"] * $result["areaW"];
 					?>
 					<div class="property-card">
 						<img src="<?= $img; ?>" alt="Property Image" style="width:100%;">
@@ -180,6 +162,42 @@
 				$db->close();}
 			?>
         </div>
+		<!--  Just commenting this out for now, I keep it here so we can keep the uh template for addToWishList and stuff
+		<div class="property-card" onclick="viewPropertyDetails(1)">
+		<img src="property-image.jpg" alt="Property Image" style="width: 100%;">
+		<h3>Property Name</h3>
+		<p>Location: Atlanta, GA</p>
+		<p>Price: $1,000,000</p>
+		<button onclick="addToWishlist(1)">Add to Wishlist</button>
+        </div>
+		
+		<div class="property-card" onclick="viewPropertyDetails(2)">
+		<img src="property-image2.jpg" alt="Property Image" style="width: 100%;">
+		<h3>Property Name</h3>
+		<p>Location: Buckhead, GA</p>
+		<p>Price: $800,000</p>
+		<button onclick="addToWishlist(2)">Add to Wishlist</button>
+        </div>
+		
+		<div class="property-card" onclick="viewPropertyDetails(3)">
+		<img src="property-image3.jpg" alt="Property Image" style="width: 100%;">
+		<h3>Property Name</h3>
+		<p>Location: Macon, GA</p>
+		<p>Price: $1,500,000</p>
+		<button onclick="addToWishlist(3)">Add to Wishlist</button>
+        </div>
+		
+		<div class="property-card" onclick="viewPropertyDetails(4)">
+		<img src="property-image4.jpg" alt="Property Image" style="width: 100%;">
+		<h3>Property Name</h3>
+		<p>Location: Alpharetta, GA</p>
+		<p>Price: $2,000,000</p>
+		<button onclick="addToWishlist(4)">Add to Wishlist</button>
+        </div> -->
     </div>
+
+
+	
+	 <!-- <script src="myscripts.js"></script> -->
 </body>
 </html>
