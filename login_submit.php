@@ -2,7 +2,7 @@
     session_start();
     $_SESSION['error'] = '';
 	require('./db.php');
-
+    initTables();
     if ($_SERVER["REQUEST_METHOD"] == 'POST')
     {
         $email = $_POST['email'];
@@ -42,7 +42,7 @@
         exit;
     } else {
         // Set location to go to if user exist
-        header('Location: ./buyer.html');
+        header('Location: ./buyer.php');
         exit;
     }
 
