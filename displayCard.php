@@ -20,6 +20,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="./styles.css">
+    <script src="./buyer.js"></script>
 </head>
 <body>
     <?=
@@ -31,8 +32,12 @@
             "<p>" . $card["beds"] . " bedrooms, " . $card["baths"] . " bathrooms</p>" . 
             "<p>" . $card["garage"] . "-car garage</p>" .
             "<p>" . $card["areaL"] . " ft. by " . $card["areaW"] . " ft.</p>".
-            "<p>Total area: " . $card["areaL"] * $card["areaW"] . " sq ft. <p>"
-        . "</div>";
+            "<p>Total area: " . $card["areaL"] * $card["areaW"] . " sq ft. <p>" ?>
+            <div>
+            <button type="button" onclick="addToWishlist()">Add to Wishlist</button>
+            </div> <?=
+        "</div>";
     ?>
+    
 </body>
 </html>
