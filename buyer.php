@@ -37,6 +37,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Buyer Dashboard</title>
 	<link rel="stylesheet" href="styles.css">
+	<script src="./buyer.js"></script>
 </head>
 <body>
     <div class="dashboard">
@@ -158,7 +159,7 @@
 					    $garage = $result["garage"];
 					    $area = $result["areaL"] * $result["areaW"];
 					?>
-					<div class="property-card">
+					<div class="property-card" onclick="seeDetail(this)">
 						<img src="<?= $img; ?>" alt="Property Image" style="width:100%;">
 						<h3>Sold by <?= $seller; ?></h3>
 						<p>Location: <?= $addr; ?></p>
