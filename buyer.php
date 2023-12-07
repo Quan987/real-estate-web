@@ -4,6 +4,11 @@
         header('Location: ./session_destroy_buyer.php');
         exit;
 	}
+	$minBed = (int)$_POST["minBed"];
+	$minBath = (float)$_POST["minBath"];
+	$minPrice =(float) $_POST["minPrice"];
+	$maxPrice = (float) $_POST["maxPrice"];
+	$searchBar = $_POST["search"];
 ?>
 
 <!DOCTYPE html>
@@ -87,17 +92,12 @@
 		</form>
         <div class="search-results" id="searchResults">
 			<?php
-				$minBed = (int)$_POST["minBed"];
-				$minBath = (float)$_POST["minBath"];
-				$minPrice =(float) $_POST["minPrice"];
-				$maxPrice = (float) $_POST["maxPrice"];
-				$searchBar = $_POST["search"];
 				$db = getDB();
 				if(isset($_POST["search"]) and !isset($_POST["wishFilter"]))
 				{
 					$sql="SELECT * FROM Card WHERE addr LIKE '%?%' price > ? and price < ? and beds > ? and baths > ? ";
 					$statement = $db->prepare($sql);
-    				$statement->bind_param("siiii", $searchBar, $minPrice, $maxPrice, $minBed, $minBath);
+    				$statement->bind_param("sddid", $searchBar, $minPrice, $maxPrice, $minBed, $minBath);
     				$statement->execute();
 					$intermediate = $statement->get_result();
 				}
@@ -106,7 +106,7 @@
 					$sql="SELECT * FROM Card WHERE addr LIKE '%?%' price > ? and price < ? and beds > ? and baths > ?";
 					//Adding implementation to include wishlisted value later.
 					$statement = $db->prepare($sql);
-    				$statement->bind_param("siiii", $searchBar, $minPrice, $maxPrice, $minBed, $minBath);
+    				$statement->bind_param("sddid", $searchBar, $minPrice, $maxPrice, $minBed, $minBath);
     				$statement->execute();
 					$intermediate = $statement->get_result();
 				}
@@ -115,7 +115,7 @@
 					$sql="SELECT * FROM Card WHERE price > ? and price < ? and beds > ? and baths > ?";
 					//Adding implementation to include wishlisted value later using EXIST in the select statement to check the 2nd table
 					$statement = $db->prepare($sql);
-    				$statement->bind_param("iiii", $minPrice, $maxPrice, $minBed, $minBath);
+    				$statement->bind_param("ddid", $minPrice, $maxPrice, $minBed, $minBath);
     				$statement->execute();
 					$intermediate = $statement->get_result();
 				}
@@ -123,7 +123,7 @@
 				{
 					$sql="SELECT * FROM Card WHERE price > ? and price < ? and beds > ? and baths > ?";
 					$statement = $db->prepare($sql);
-    				$statement->bind_param("iiii", $minPrice, $maxPrice, $minBed, $minBath);
+    				$statement->bind_param("ddid", $minPrice, $maxPrice, $minBed, $minBath);
     				$statement->execute();
 					$intermediate = $statement->get_result();
 				}
@@ -148,10 +148,10 @@
 					$area = $result["areaL"] * $result["areaW"];
 					?>
 					<div class="property-card">
-						<img src="<?=$img?>" alt="Property Image" style="width:100%;">
-						<h3>Sold by <?=$seller?></h3>
-						<p>Location: <?=$addr?></p>
-						<p>Price: <?=$price?></p>
+						<img src="<?= $img; ?>" alt="Property Image" style="width:100%;">
+						<h3>Sold by <?= $seller; ?></h3>
+						<p>Location: <?= $addr; ?></p>
+						<p>Price: <?= $price; ?></p>
 						<!-- The stuff in here should be saved for when the user clicks on the card
 						<p>//$beds  bedrooms, //$baths bathrooms, =//$garage garage</p>
 						<p>Area: //$area square feet</p>
