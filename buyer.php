@@ -10,6 +10,7 @@
 	$minBath = (float)$_POST["minBath"];
 	$minPrice =(float) $_POST["minPrice"];
 	$maxPrice = (float) $_POST["maxPrice"];
+	$email = $_SESSION['user_auth'];
     if(isset($_POST["search"]) and $_POST["search"] != '')
     {
         $searchAvailable = 1;
@@ -116,7 +117,6 @@
                 if($searchAvailable == 1 && $wishFilter == 1)
                 {
                     $sql="SELECT * FROM Card WHERE (addr LIKE CONCAT('%', ?, '%')) and price > ? and price < ? and beds > ? and baths > ?";
-					//Adding implementation to include wishlisted value later.
 					$statement = $db->prepare($sql);
     				$statement->bind_param("sddid",$searchBar, $minPrice, $maxPrice, $minBed, $minBath);
     				$statement->execute();
@@ -125,7 +125,6 @@
                 else if($wishFilter == 1)
                 {
                     $sql="SELECT * FROM Card WHERE price > ? and price < ? and beds > ? and baths > ?";
-					//Adding implementation to include wishlisted value later using EXIST in the select statement to check the 2nd table
 					$statement = $db->prepare($sql);
     				$statement->bind_param("ddid", $minPrice, $maxPrice, $minBed, $minBath);
     				$statement->execute();
@@ -147,8 +146,8 @@
     				$statement->execute();
 					$intermediate = $statement->get_result();
                 }
-                    while($result = $intermediate->fetch_assoc())
-				    {
+                while($result = $intermediate->fetch_assoc())
+				{
 					    $seller = $result["seller"];
 					    $addr = $result["addr"];
 					    $age = $result["age"];
@@ -158,6 +157,34 @@
 					    $baths = $result["baths"];
 					    $garage = $result["garage"];
 					    $area = $result["areaL"] * $result["areaW"];
+						if($wishFilter == 1)
+						{
+							$inWishList = 0;
+							$wishList = getWishlistByEmail($email);
+							foreach (getWishlistByEmail($email) as $row) 
+							{
+								if(in_array($addr, $row))
+								{
+									$inWishList = 1;
+									break;
+								}
+							}
+							if($inWishList == 1)
+							{ ?>
+								<div class="property-card" onclick="seeDetail(this)">
+								<img src="<?= $img; ?>" alt="Property Image" style="width:100%;">
+								<h3>Sold by <?= $seller; ?></h3>
+								<p>Location: <?= $addr; ?></p>
+								<p>Price: $<?= $price; ?></p>
+								<!-- The stuff in here should be saved for when the user clicks on the card
+								<p>//$beds  bedrooms, //$baths bathrooms, =//$garage garage</p>
+								<p>Area: //$area square feet</p>
+								Implement wishlist later -->
+					</div>
+							<?php }
+						}
+						else
+						{
 					?>
 					<div class="property-card" onclick="seeDetail(this)">
 						<img src="<?= $img; ?>" alt="Property Image" style="width:100%;">
@@ -170,6 +197,7 @@
 						Implement wishlist later -->
 					</div>
 				<?php }
+				}
 				$db->close();
 			?>
         </div>
