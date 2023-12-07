@@ -35,7 +35,9 @@
             "<p>Total area: " . $card["areaL"] * $card["areaW"] . " sq ft. <p>" ?>
             <div>
             <button type="button" onclick="addToWishlist()">Add to Wishlist</button>
-            </div> <?=
+            </div>
+            <p class = "center"><a href="buyer.php">Back to dashboard</a></p>
+            <?=
         "</div>";
     ?>
     
