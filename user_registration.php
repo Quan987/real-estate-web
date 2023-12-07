@@ -58,6 +58,7 @@
       
       <input type="submit" value="Sign Up">
     </form>
+    <p class = "center"><a href="login.php">Go to Login</a></p>
   </div>
 
 </body>
