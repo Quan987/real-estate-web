@@ -201,6 +201,7 @@
 				$db->close();
 			?>
         </div>
+		<button id="logout"><a href="./session_destroy_buyer.php">Logout</a></button>
     </div>
 </body>
 </html>
