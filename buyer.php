@@ -42,7 +42,7 @@
 </head>
 <body>
     <div class="dashboard">
-        <div class="welcome-note" id="welcomeNote"></div>
+        <div class="welcome-note" id="welcomeNote">Welcome to our dashboard</div>
 		
         <!-- <input type="text" id="searchInput" class="search-bar" placeholder="Search...">
         <button onclick="search()">Search</button> -->
